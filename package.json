@@ -1,0 +1,17 @@
+{
+  "name": "loginSystem",
+  "version": "1.0.0",
+  "description": "cv",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "mongoose": "*"
+  },
+  "author": "",
+  "license": "ISC"
+}
