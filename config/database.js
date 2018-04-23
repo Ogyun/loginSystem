@@ -1,3 +1,3 @@
 module.exports = {
-  database : 'mongodb://admin:root@ds117136.mlab.com:17136/chatappdb',
+    database : 'mongodb://username:password@ds247479.mlab.com:47479/loginsystemdb'
 }

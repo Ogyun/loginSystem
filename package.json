@@ -10,6 +10,8 @@
   "dependencies": {
     "express": "*",
     "body-parser": "*",
+    "bcryptjs": "*",
+    "cors": "*",
     "mongoose": "*"
   },
   "author": "",
