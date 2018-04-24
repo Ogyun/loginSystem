@@ -31,4 +31,20 @@ storeUserData(token, user){
   this.user = user;
 }
 
+loggedIn(){
+//  return tokenNotExpired('id_token');
+  let token = localStorage.getItem('id_token');
+  let headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  console.log( this.http.post('http://localhost:3000/users/validateToken', token,{headers: headers})
+    .map(res => res.json()));
+
+}
+
+logout(){
+  this.authToken = null;
+  this.user = null;
+  localStorage.clear();
+}
+
 }

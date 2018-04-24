@@ -19,7 +19,7 @@
        </li>
        <li  [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact:true}"><a class="nav-link" [routerLink]="['/dashboard']">Dashboard</a></li>
        <li  [routerLinkActive]="['active']" [routerLinkActiveOptions] = "{exact:true}"><a class="nav-link" [routerLink]="['/profile']">Profile</a></li>
-       <li><a class="nav-link" href="#">Logout</a></li>
+       <li><a class="nav-link" (click)="onLogoutClick()" href="#">Logout</a></li>
      </ul>
    </div>
  </nav>
