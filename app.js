@@ -7,6 +7,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+
 // DATABASE CONNECTION
 
 // Promise libary
@@ -25,8 +26,10 @@ mongoose.connection.on('error', (err) => {
   console.log('Database error : ' + err);
 });
 
-// Set Static Folder
+// Declare express variable
 const app = express();
+
+// Set Static Folder
 staticServe = express.static(`${ __dirname }/public`);
 
 // CORS Middleware
