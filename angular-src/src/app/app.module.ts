@@ -17,14 +17,15 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import {ValidateService} from './services/validate.service';
 import {AuthService} from './services/auth.service';
 import{FlashMessagesModule} from 'angular2-flash-messages';
+import{AuthGuard} from  './guards/auth.guard';
 
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'dashboard', component: DashboardComponent},
-  {path: 'profile', component: ProfileComponent}
+  {path: 'dashboard', component: DashboardComponent,pathMatch: 'full', canActivate:[AuthGuard]},
+  {path: 'profile', component: ProfileComponent, pathMatch: 'full', canActivate:[AuthGuard]}
 ]
 
 
@@ -45,7 +46,7 @@ const appRoutes: Routes = [
     FormsModule,
     FlashMessagesModule.forRoot()
   ],
-  providers: [ValidateService,AuthService],
+  providers: [ValidateService,AuthService,AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
