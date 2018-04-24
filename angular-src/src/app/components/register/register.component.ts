@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {ValidateService} from '../../services/validate.service';
 import{FlashMessagesService} from 'angular2-flash-messages/module';
+import {AuthService} from '../../services/auth.service';
+import{Router} from '@angular/router';
+
 
 @Component({
   selector: 'app-register',
@@ -12,7 +15,11 @@ export class RegisterComponent implements OnInit {
   email: String;
   password: String;
 
-  constructor( private validateService: ValidateService, private flashMessage:FlashMessagesService) { }
+  constructor(
+     private validateService: ValidateService,
+     private flashMessage:FlashMessagesService,
+     private authService:AuthService,
+     private router: Router) { }
 
   ngOnInit() {
   }
@@ -42,6 +49,28 @@ export class RegisterComponent implements OnInit {
 
     }
 
+    //Register user
+    this.authService.registerUser(user).subscribe(data =>{
+    if(data.success)
+    {
+      this.flashMessage.show('You are now registered and can log in', {cssClass:'alert-success', timeout:3000});
+      this.router.navigate(['/login']);
+    }
+    else if (data.msg === "username already in use") {
+      this.flashMessage.show('Username already in use', {cssClass:'alert-danger', timeout:3000});
+      this.router.navigate(['/register']);
+    }
+
+    else if (data.msg === "email already in use") {
+      this.flashMessage.show('Email already in use', {cssClass:'alert-danger', timeout:3000});
+      this.router.navigate(['/register']);
+    }
+
+    else {
+      this.flashMessage.show('Something went wrong', {cssClass:'alert-danger', timeout:3000});
+      this.router.navigate(['/register']);
+    }
+    })
 
   }
 }
