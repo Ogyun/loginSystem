@@ -12,18 +12,6 @@ router.post('/register', (req, res, next) => {
     password: req.body.password
   });
 
-  User.getUserByUsername(req.body.username, (err, user) => {
-          if (err) throw err
-          if (user != null) {
-            res.json({success: false, msg: 'username already in use'})
-          } else {
-            User.getUserByEmail(req.body.email, (err, email) => {
-              if (err) throw err
-              if (email != null) {
-                res.json({success: false, msg: 'email already in use'})
-              }
-              else {
-
   User.addUser(newUser, (err, user) => {
     if(err) {
       res.json({success: false, msg:'Failed to register user'});
@@ -31,7 +19,6 @@ router.post('/register', (req, res, next) => {
       res.json({success: true, msg:'User registered'});
     }
   });
-  }
 });
 
 // Authenticate
@@ -43,7 +30,7 @@ router.post('/authenticate', (req, res, next) => {
     if(err) throw err;
     if(!user) {
       return res.json({success: false, msg: 'User not found'});
-    }
+    } else {
 
     User.comparePassword(password, user.password, (err, isMatch) => {
       if(err) throw err;
@@ -63,6 +50,7 @@ router.post('/authenticate', (req, res, next) => {
         return res.json({success: false, msg: 'Wrong password'});
       }
     });
+    }
   });
 });
 

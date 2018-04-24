@@ -17,8 +17,8 @@ module.exports = {
   generateTokens: function(user, secret) {
     let newToken = md5(user + secret),
     currentDate = new Date();
-    //expireDate = currentDate.setHours(currentDate.getHours() + 1);
-    expireDate = currentDate.setMinutes(currentDate.getMinutes() + 2);
+    expireDate = currentDate.setHours(currentDate.getHours() + 1);
+    //expireDate = currentDate.setMinutes(currentDate.getMinutes() + 2);
 
     let tokenObj = {
       token : newToken,
