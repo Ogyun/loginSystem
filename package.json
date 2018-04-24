@@ -8,12 +8,13 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "*",
-    "body-parser": "*",
     "bcryptjs": "*",
+    "body-parser": "*",
     "cors": "*",
+    "express": "*",
+    "md5": "*",
     "mongoose": "*",
-    "md5": "*"
+    "node-cron": "^1.2.1"
   },
   "author": "",
   "license": "ISC",
