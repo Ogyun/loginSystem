@@ -52,4 +52,14 @@ router.post('/authenticate', (req, res, next) => {
     });
   });
 });
+
+router.post('/validateToken', (req, res, next) => {
+  const token = req.body.token
+  if(tokens.verifyToken(token)) {
+    return res.json({success: true})
+  } else {
+    return res.json({success: false})
+  }
+});
+
 module.exports = router;
