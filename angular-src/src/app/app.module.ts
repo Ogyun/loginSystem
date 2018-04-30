@@ -21,10 +21,10 @@ import{AuthGuard} from  './guards/auth.guard';
 import {PostService} from './services/post.service';
 
 const appRoutes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'register', component: RegisterComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'dashboard', component: DashboardComponent,pathMatch: 'full', canActivate:[AuthGuard]},
+  {path: '', component: HomeComponent, pathMatch: 'full'},
+  {path: 'register', component: RegisterComponent, pathMatch: 'full'},
+  {path: 'login', component: LoginComponent, pathMatch: 'full'},
+  {path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate:[AuthGuard]},
   {path: 'profile', component: ProfileComponent, pathMatch: 'full', canActivate:[AuthGuard]}
 ]
 
@@ -46,7 +46,7 @@ const appRoutes: Routes = [
     FormsModule,
     FlashMessagesModule.forRoot()
   ],
-  providers: [ValidateService,AuthService,AuthGuard,PostService ],
+  providers: [ValidateService,AuthService,AuthGuard,PostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
