@@ -1,3 +1,22 @@
-<p>
-  dashboard works!
-</p>
+<h2 class="page-header"> Dashboard </h2>
+<p>Welcome to your Dashboard</p>
+
+<div style="height: 400px; width: 1200px; overflow: auto; border:2px solid black;">
+  <div *ngFor="let msg of messages" style="background-color: lightblue;">
+
+    <p> {{ msg.username }} </p>
+    <p> <b> {{ msg.post }} </b> </p>
+    <p> {{ msg.date }} </p>
+
+  </div>
+</div>
+<br>
+<form (submit)="onRegisterSubmit()">
+
+  <div class="form-group">
+    <input type="text" [(ngModel)]="msg" name="msg" class="form-control" >
+  </div>
+
+
+  <input type="submit" class="btn btn-primary" value="Submit">
+</form>
