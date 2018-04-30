@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {PostService} from '../../services/post.service';
 
 @Component({
-  moduleId: module.id,
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
