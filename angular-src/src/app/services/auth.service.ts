@@ -37,7 +37,11 @@ export class AuthService {
 
   loggedIn(){
     this.loadToken();
-    return JSON.parse(atob(this.authToken.split(".")[1])).iat > Date.now();
+    if(this.authToken != null) {
+      return JSON.parse(atob(this.authToken.split(".")[1])).iat > Date.now();
+    } else {
+      return false;
+    }
   }
 
   logout(){
