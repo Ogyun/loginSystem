@@ -32,13 +32,13 @@ storeUserData(token, user){
 }
 
 loggedIn(){
-  let token = {token:localStorage.getItem('id_token')};
+//  let token = {token:localStorage.getItem('id_token')};
 //  return tokenNotExpired('id_token');
 //   let token = localStorage.getItem('id_token');
-   let headers = new Headers();
-   headers.append('Content-Type', 'application/json');
-   return this.http.post('http://localhost:3000/users/validateToken', token,{headers: headers});
-   .map(res => res.json().result);
+//   let headers = new Headers();
+//   headers.append('Content-Type', 'application/json');
+//   return this.http.post('http://localhost:3000/users/validateToken', token,{headers: headers});
+//    .map(res => res.json().result);
 
 }
 

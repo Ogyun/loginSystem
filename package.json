@@ -14,7 +14,9 @@
     "express": "*",
     "md5": "*",
     "mongoose": "*",
-    "node-cron": "^1.2.1"
+    "node-cron": "^1.2.1",
+    "sha256": "^0.2.0",
+    "crypto-js": "*"
   },
   "author": "",
   "license": "ISC",

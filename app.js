@@ -3,9 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const config = require('./config/database');
 const userRoute = require('./routes/userRoute');
+const postRoute = require('./routes/postRoute');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const tokens = require('./tokens.js');
 
 // DATABASE CONNECTION
 
@@ -39,6 +41,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/users', userRoute);
+app.use('/posts', postRoute);
 app.use("/", staticServe);
 
 // Set port number

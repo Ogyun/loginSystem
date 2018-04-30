@@ -10,6 +10,12 @@ export class DashboardComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-  }
+this.postService.getAllPosts().subscribe(posts => {
+    posts.posts.forEach(e => this.messages.unshift(e));
+  },
+  err => {
+    console.log(err);
+    return false;
+});
 
 }
