@@ -3,8 +3,9 @@ const router = express.Router();
 const Post = require('../models/post');
 const config = require('../config/database');
 const CryptoJS = require("crypto-js");
+const authGuard = require("../authGuard");
 
-// new post
+// Create a new post
 router.post('/post', (req, res, next) => {
 
   let newPost = new Post ({
@@ -27,7 +28,7 @@ router.post('/post', (req, res, next) => {
 
 });
 
-//getAllPosts
+// Get all posts
 router.get('/getAllPosts', (req, res, next) => {
   Post.getAllPosts((err, posts) => {
     if (err)
@@ -42,7 +43,7 @@ router.get('/getAllPosts', (req, res, next) => {
         e.post = decryptedData;
       })
       res.json({success: true, posts});
-      };
+    };
   });
 });
 

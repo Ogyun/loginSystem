@@ -9,43 +9,41 @@ export class AuthService {
 
   constructor(private http:Http) { }
 
-
   registerUser(user){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     return this.http.post('http://localhost:3000/users/register', user,{headers: headers})
-      .map(res => res.json());
+    .map(res => res.json());
   }
 
   authenticateUser(user){
-  let headers = new Headers();
-  headers.append('Content-Type', 'application/json');
-  return this.http.post('http://localhost:3000/users/authenticate', user,{headers: headers})
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/authenticate', user,{headers: headers})
     .map(res => res.json());
-}
+  }
 
-storeUserData(token, user){
-  localStorage.setItem('id_token', token);
-  localStorage.setItem('user', JSON.stringify(user));
-  this.authToken = token;
-  this.user = user;
-}
+  storeUserData(token, user){
+    localStorage.setItem('id_token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    this.authToken = token;
+    this.user = user;
+  }
 
-loggedIn(){
-//  let token = {token:localStorage.getItem('id_token')};
-//  return tokenNotExpired('id_token');
-//   let token = localStorage.getItem('id_token');
-//   let headers = new Headers();
-//   headers.append('Content-Type', 'application/json');
-//   return this.http.post('http://localhost:3000/users/validateToken', token,{headers: headers});
-//    .map(res => res.json().result);
+  loadToken(){
+    const token = localStorage.getItem('id_token');
+    this.authToken = token;
+  }
 
-}
+  loggedIn(){
+    this.loadToken();
+    return JSON.parse(atob(this.authToken.split(".")[1])).iat > Date.now();
+  }
 
-logout(){
-  this.authToken = null;
-  this.user = null;
-  localStorage.clear();
-}
+  logout(){
+    this.authToken = null;
+    this.user = null;
+    localStorage.clear();
+  }
 
 }

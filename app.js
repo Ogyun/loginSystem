@@ -8,6 +8,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const tokens = require('./tokens.js');
+const authGuard = require('./authGuard');
 
 // DATABASE CONNECTION
 
@@ -31,7 +32,7 @@ mongoose.connection.on('error', (err) => {
 const app = express();
 
 // Set Static Folder
-staticServe = express.static(`${ __dirname }/public`);
+app.use(express.static(path.join(__dirname, './angular-src/dist')));
 
 // CORS Middleware
 app.use(cors());
@@ -42,7 +43,6 @@ app.use(bodyParser.json());
 // Routes
 app.use('/users', userRoute);
 app.use('/posts', postRoute);
-app.use("/", staticServe);
 
 // Set port number
 const port = process.env.PORT || 3000;

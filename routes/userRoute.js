@@ -35,7 +35,8 @@ router.post('/authenticate', (req, res, next) => {
       User.comparePassword(password, user.password, (err, isMatch) => {
         if(err) throw err;
         if(isMatch) {
-          const token = tokens.generateTokens(username, "test");
+
+          const token = tokens.signUser(user);
 
           res.json({
             success: true,

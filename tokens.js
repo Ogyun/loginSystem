@@ -1,12 +1,13 @@
 // Imports
 const md5 = require('md5');
-var cron = require('node-cron');
 const config = require('./config/database');
 const sha256 = require('sha256');
+const cron = require('node-cron');
+
 // Token array
 let tokenArr = [];
 
-// Clean up task
+// Clean up dead tokens scheduled task
 cron.schedule('* * * * *', function(){
   console.log('running a task every minute');
   tokenArr.forEach( (e, index) => {
@@ -20,18 +21,20 @@ cron.schedule('* * * * *', function(){
 module.exports = {
 
   // Generate a new token valid for 1hour
-  generateTokens: function() {
-    currentDate = new Date();
-    expireDate = currentDate.setHours(currentDate.getHours() + 1);
-    //expireDate = currentDate.setMinutes(currentDate.getMinutes() + 2);
+  signUser: function(user) {
+
+    const currentDate = new Date();
+    const expireDate = currentDate.setMinutes(currentDate.getMinutes() + 2);
+
 
     // Header
     let header = { "alg" : "HS256", "typ" : "JWT"};
     // Payload
-    let payload = { "sub" : 1234567890, "name" : "John Wick", "iat": 1516239022};
+    let payload = { "sub" : user._id, "name" : user.username, "iat": expireDate};
     // Secret
     let secret = sha256(config.secret);
 
+    // Encode token
     let h = Buffer.from(JSON.stringify(header)).toString('base64');
     let p = Buffer.from(JSON.stringify(payload)).toString('base64');
 
@@ -39,32 +42,25 @@ module.exports = {
                   "." + Buffer.from(JSON.stringify(payload)).toString('base64') +
                   "." + secret;
 
-    /*
-    let tokenObj = {
-      token : newToken,
-      user : user,
-      expires : expireDate
-    };
-
-    tokenArr.push(tokenObj);
-    */
-
+    tokenArr.push(newToken)
     return newToken
   },
 
-  verifyToken: function(testtoken) {
+  verifyToken: function(token) {
     let found = false;
 
     tokenArr.forEach(e => {
-      if(e.token === testtoken && e.expires > new Date()) {
-        found = true;
+      if(e.token === token) {
+        payload = JSON.parse(atob(token.split(".")[1]));
+        if (payload.iat > Date.now()) {
+          console.log('its okay!')
+          found = true;
+        } else {
+          // remove dead token
+        }
       }
     })
     return found;
-  },
-
-  getAllTokens: function() {
-    return tokenArr;
   }
 
 };
