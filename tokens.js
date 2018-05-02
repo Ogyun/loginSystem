@@ -3,6 +3,7 @@ const md5 = require('md5');
 const config = require('./config/database');
 const sha256 = require('sha256');
 const cron = require('node-cron');
+const atob = require('atob');
 
 // Token array
 let tokenArr = [];
@@ -24,7 +25,7 @@ module.exports = {
   signUser: function(user) {
 
     const currentDate = new Date();
-    const expireDate = currentDate.setMinutes(currentDate.getMinutes() + 2);
+    const expireDate = currentDate.setMinutes(currentDate.getMinutes() + 1);
 
 
     // Header
@@ -48,12 +49,10 @@ module.exports = {
 
   verifyToken: function(token) {
     let found = false;
-
     tokenArr.forEach(e => {
-      if(e.token === token) {
+      if(e === token) {
         payload = JSON.parse(atob(token.split(".")[1]));
         if (payload.iat > Date.now()) {
-          console.log('its okay!')
           found = true;
         } else {
           // remove dead token

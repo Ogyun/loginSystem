@@ -3,10 +3,17 @@ const router = express.Router();
 const Post = require('../models/post');
 const config = require('../config/database');
 const CryptoJS = require("crypto-js");
-const authGuard = require("../authGuard");
+const tokens = require('../tokens.js');
 
 // Create a new post
-router.post('/post', (req, res, next) => {
+router.post('/post', function(req, res, next) {
+
+  if(req.headers.authorization =! null && tokens.verifyToken(req.headers.authorization)) {
+    next();
+  } else {
+    res.send('Authorization failed!');
+  }
+}, (req, res, next) => {
 
   let newPost = new Post ({
     username: req.body.username,
@@ -29,7 +36,14 @@ router.post('/post', (req, res, next) => {
 });
 
 // Get all posts
-router.get('/getAllPosts', (req, res, next) => {
+router.get('/getAllPosts', function(req, res, next) {
+
+  if(req.headers.authorization =! null && tokens.verifyToken(req.headers.authorization)) {
+    next();
+  } else {
+    res.send('Authorization failed!');
+  }
+}, (req, res, next) => {
   Post.getAllPosts((err, posts) => {
     if (err)
     {
