@@ -51,7 +51,7 @@ app.get('*', (req, res) => {
 });
 
 // Set port number
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 443;
 
 // Start server
 server.listen(port, () => {
