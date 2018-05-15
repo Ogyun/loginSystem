@@ -16,60 +16,58 @@ export class RegisterComponent implements OnInit {
   password: String;
 
   constructor(
-     private validateService: ValidateService,
-     private flashMessage:FlashMessagesService,
-     private authService:AuthService,
-     private router: Router) { }
+    private validateService: ValidateService,
+    private flashMessage:FlashMessagesService,
+    private authService:AuthService,
+    private router: Router) { }
 
-  ngOnInit() {
-  }
-
-  onRegisterSubmit(){
-
-  const user = {
-    email: this.email,
-    username: this.username,
-    password: this.password
+    ngOnInit() {
     }
 
-    //Required Fields
-    if(!this.validateService.validateRegister(user))
-    {
-      this.flashMessage.show('Please fill in all fields', {cssClass:'alert-danger', timeout:3000});
-      return false;
+    onRegisterSubmit(){
 
-    }
+      const user = {
+        email: this.email,
+        username: this.username,
+        password: this.password
+      }
 
-  //Validate email
-    if(!this.validateService.validateEmail(user.email))
-    {
+      //Required Fields
+      if(!this.validateService.validateRegister(user)) {
+        this.flashMessage.show('Please fill in all fields', {cssClass:'alert-danger', timeout:3000});
+        return false;
+      }
 
-      this.flashMessage.show('Please use a valid email', {cssClass:'alert-danger', timeout:3000});
-      return false;
+      //Validate email
+      if(!this.validateService.validateEmail(user.email)) {
+        this.flashMessage.show('Please use a valid email', {cssClass:'alert-danger', timeout:3000});
+        return false;
+      }
 
-    }
+      if(!this.validateService.validatePassword(user.password)) {
+        this.flashMessage.show('Password not strong enough! A password must contain number, lower and uppercase letter and be atleast 8 characters long', {cssClass:'alert-danger', timeout:3000});
+        return false;
+      }
 
-    //Register user
-    this.authService.registerUser(user).subscribe(data =>{
-    if(data.success)
-    {
-      this.flashMessage.show('You are now registered and can log in', {cssClass:'alert-success', timeout:3000});
-      this.router.navigate(['/login']);
-    }
-    else if (data.msg === "username already in use") {
-      this.flashMessage.show('Username already in use', {cssClass:'alert-danger', timeout:3000});
-      this.router.navigate(['/register']);
-    }
+      //Register user
+      this.authService.registerUser(user).subscribe(data =>{
+      if(data.success) {
+        this.flashMessage.show('You are now registered and can log in', {cssClass:'alert-success', timeout:3000});
+        this.router.navigate(['/login']);
+      } else if (data.msg === "username already in use") {
+        this.flashMessage.show('Username already in use', {cssClass:'alert-danger', timeout:3000});
+        this.router.navigate(['/register']);
+      }
 
-    else if (data.msg === "email already in use") {
-      this.flashMessage.show('Email already in use', {cssClass:'alert-danger', timeout:3000});
-      this.router.navigate(['/register']);
-    }
+      else if (data.msg === "email already in use") {
+        this.flashMessage.show('Email already in use', {cssClass:'alert-danger', timeout:3000});
+        this.router.navigate(['/register']);
+      }
 
-    else {
-      this.flashMessage.show('Something went wrong', {cssClass:'alert-danger', timeout:3000});
-      this.router.navigate(['/register']);
-    }
+      else {
+        this.flashMessage.show('Something went wrong', {cssClass:'alert-danger', timeout:3000});
+        this.router.navigate(['/register']);
+      }
     })
 
   }
