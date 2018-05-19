@@ -12,7 +12,7 @@ export class PostService {
     this.loadToken();
     headers.append('Authorization', this.authToken);
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://167.99.246.26:443/posts/getAllPosts',{headers: headers})
+    return this.http.get('http://167.99.246.26:9000/posts/getAllPosts',{headers: headers})
       .map(res => res.json());
   }
 
