@@ -32,9 +32,9 @@ mongoose.connection.on('error', (err) => {
 
 // Declare express variable
 const options = {
-  key: fs.readFileSync("encryption/nginx-selfsigned.key"),
-  cert: fs.readFileSync("encryption/nginx-selfsigned.crt"),
-  dhparam: fs.readFileSync("encryption/dhparam.pem")
+  key: fs.readFileSync("/encryption/nginx-selfsigned.key"),
+  cert: fs.readFileSync("/encryption/nginx-selfsigned.crt"),
+  dhparam: fs.readFileSync("/encryption/dhparam.pem")
 };
 
 const app = express();
