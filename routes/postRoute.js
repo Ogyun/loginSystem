@@ -4,6 +4,7 @@ const Post = require('../models/post');
 const config = require('../config/database');
 const CryptoJS = require("crypto-js");
 const tokens = require('../tokens.js');
+const sha256 = require('sha256');
 
 // Create a new post
 router.post('/post', function(req, res, next) {
@@ -19,7 +20,7 @@ router.post('/post', function(req, res, next) {
     username: req.body.username,
     post: req.body.post,
     date: req.body.date,
-    lastEdit: req.body.lastEdit
+    checksum: sha256(req.body.username)
   });
 
   let encryptedPost = CryptoJS.AES.encrypt(JSON.stringify(newPost.post), config.secret);
@@ -45,13 +46,19 @@ router.get('/getAllPosts', function(req, res, next) {
   }
 }, (req, res, next) => {
   Post.getAllPosts((err, posts) => {
-    if (err)
-    {
+    if (err) {
       res.json({succes: false, msg:'Failed to get posts'});
     }
-    else
-    {
+    else {
       posts.forEach(e => {
+
+        // Checksum
+        if(!(e.checksum == sha256(e.post.toString()))) {
+          e.post = '** corrupted post! **'
+          return;
+        }
+
+        // Decrypt messages
         var bytes  = CryptoJS.AES.decrypt(e.post.toString(), config.secret);
         var decryptedData = bytes.toString(CryptoJS.enc.Utf8);
         e.post = decryptedData;

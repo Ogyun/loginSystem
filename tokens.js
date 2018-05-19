@@ -25,7 +25,7 @@ module.exports = {
   signUser: function(user) {
 
     const currentDate = new Date();
-    const expireDate = currentDate.setMinutes(currentDate.getMinutes() + 1);
+    const expireDate = currentDate.setHours(currentDate.getHours() + 1);
 
 
     // Header

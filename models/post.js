@@ -15,6 +15,10 @@ const postSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
     required: true
+  },
+  checksum: {
+    type: String,
+    required: false
   }
 });
 

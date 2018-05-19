@@ -10,6 +10,8 @@ const cors = require('cors');
 const tokens = require('./tokens.js');
 const CryptoJS = require("crypto-js");
 const Post = require('./models/post');
+const sha256 = require('sha256');
+
 // DATABASE CONNECTION
 
 // Promise libary
@@ -81,12 +83,18 @@ io.use(function(socket, next){
       username: data.username,
       post: data.post,
       date: data.date,
+      checksum: ""
     });
 
     // Broadcast post to clients
     io.emit('receive message', newPost);
+
     // Encrypt post
     newPost.post = encryptedPost
+
+    // Add checksum
+    newPost.checksum = sha256(encryptedPost.toString());
+
     // Save post in db.
     Post.addPost(newPost, (err, post) => {
       if(err) throw err;
