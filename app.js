@@ -59,7 +59,7 @@ app.get('*', (req, res) => {
 });
 
 // Set port number
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 // Start server
 server.listen(port, () => {
