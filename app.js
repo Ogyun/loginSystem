@@ -11,7 +11,7 @@ const tokens = require('./tokens.js');
 const CryptoJS = require("crypto-js");
 const Post = require('./models/post');
 const sha256 = require('sha256');
-
+const https = require("https"),fs = require("fs");
 // DATABASE CONNECTION
 
 // Promise libary
@@ -31,8 +31,14 @@ mongoose.connection.on('error', (err) => {
 });
 
 // Declare express variable
+const options = {
+  key: fs.readFileSync("/etc/ssl/private/nginx-selfsigned.key"),
+  cert: fs.readFileSync("/etc/ssl/certs/nginx-selfsigned.crt"),
+  dhparam: fs.readFileSync("/etc/ssl/certs/dhparam.pem")
+};
+
 const app = express();
-var server = require('http').createServer(app);
+var server = https.createServer(options,app);
 var io = require('socket.io')(server);
 
 // Set Static Folder
