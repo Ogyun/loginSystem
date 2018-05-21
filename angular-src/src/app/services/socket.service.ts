@@ -4,7 +4,7 @@ import * as socketIo from 'socket.io-client';
 
 export class SocketService {
   token = localStorage.getItem('id_token');
-  private socket = socketIo('http://167.99.246.26:3000', {
+  private socket = socketIo('https://167.99.246.26:3000', {
     query: {token: this.token}
   });
 
