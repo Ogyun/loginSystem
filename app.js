@@ -34,16 +34,16 @@ mongoose.connection.on('error', (err) => {
 
 // Declare express variable
 
-/*
+
 const options = {
   key: fs.readFileSync("/encryption/nginx-selfsigned.key"),
   cert: fs.readFileSync("/encryption/nginx-selfsigned.crt"),
   dhparam: fs.readFileSync("/encryption/dhparam.pem")
 };
-*/
+
 
 const app = express();
-var server = require('http').createServer(app);
+var server = https.createServer(options, app);
 var io = require('socket.io')(server);
 
 // Set Static Folder
