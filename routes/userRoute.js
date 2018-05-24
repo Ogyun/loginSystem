@@ -26,16 +26,22 @@ router.post('/authenticate', (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
 
+
   User.getUserByUsername(username, (err, user) => {
     if(err) throw err;
     if(!user) {
-      return res.json({success: false, msg: 'User not found'});
-    } else {
+      return res.json({success: false, msg: 'Wrong password or username'});
+    }
+
+    else {
+
+      if(User.isLocked(user)) return res.json({success: false, msg: 'Too many failed login attempts, account is locked untill: ' + new Date(user.lockUntil)})
 
       User.comparePassword(password, user.password, (err, isMatch) => {
         if(err) throw err;
         if(isMatch) {
 
+          User.resetLoginCount(user.username);
           const token = tokens.signUser(user);
 
           res.json({
@@ -48,7 +54,8 @@ router.post('/authenticate', (req, res, next) => {
             }
           });
         } else {
-          return res.json({success: false, msg: 'Wrong password'});
+          User.failedLogin(user);
+          return res.json({success: false, msg: 'Wrong password or username'});
         }
       });
     }

@@ -12,6 +12,7 @@ const CryptoJS = require("crypto-js");
 const Post = require('./models/post');
 const sha256 = require('sha256');
 const https = require("https");
+const http = require("http");
 const fs = require("fs");
 
 // DATABASE CONNECTION
@@ -34,16 +35,16 @@ mongoose.connection.on('error', (err) => {
 
 // Declare express variable
 
-
+/*
 const options = {
   key: fs.readFileSync("/encryption/nginx-selfsigned.key"),
   cert: fs.readFileSync("/encryption/nginx-selfsigned.crt"),
   dhparam: fs.readFileSync("/encryption/dhparam.pem")
 };
-
+*/
 
 const app = express();
-var server = https.createServer(options, app);
+var server = http.createServer(app);
 var io = require('socket.io')(server);
 
 // Set Static Folder

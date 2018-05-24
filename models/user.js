@@ -15,13 +15,69 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  loginAttempts: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  lastLogin: {
+    type: Number
+  },
+  lockUntil: {
+    type: Number
   }
 });
 
 const User = module.exports = mongoose.model('User', userSchema);
 
 // Methods
-getUserById = (id, callback) => {
+module.exports.isLocked = (user) => {
+  if(user.lockUntil < Date.now() || user.lockUntil == null) return false;
+  else return true;
+}
+
+module.exports.failedLogin = (user) => {
+
+  let currentDate = new Date();
+
+  if(user.loginAttempts == 3) {
+
+      User.update({username : user.username}, {lockUntil : currentDate.setMinutes(currentDate.getMinutes() + 30)}, (err, res) => {
+        if (err) throw err
+        else return true;
+      });
+  }
+
+  else if(user.lastLogin > currentDate.setMinutes(currentDate.getMinutes() + 5)) {
+    User.update({username : user.username}, {$inc: {loginAttempts: 1}}, (err, res) => {
+      if(err) throw err
+      else User.updateLogin(user.username)
+    })
+  }
+    else {
+      User.update({username : user.username}, {loginAttempts: 1}, (err, res) => {
+        if(err) throw err
+        else User.updateLogin(user.username)
+      })
+  }
+}
+
+module.exports.resetLoginCount = (username) => {
+  User.update({username : username}, {loginAttempts: 0}, (err, res) => {
+    if(err) throw err
+    else return true;
+  })
+}
+
+module.exports.updateLogin = (username) => {
+    User.update({username : this.username}, {lastLogin : new Date()}, (err, res) => {
+      if(err) throw err
+      else return true;
+    })
+}
+
+module.exports.getUserById = (id, callback) => {
   User.findById(id, callback);
 }
 
