@@ -3,12 +3,14 @@ const router = express.Router();
 const User = require('../models/user');
 const config = require('../config/database');
 const tokens = require('../tokens.js');
+const sanitize = require('../sanitize.js');
+
 
 // Register
 router.post('/register', (req, res, next) => {
   let newUser = new User({
-    username: req.body.username,
-    email: req.body.email,
+    username: sanitize.encodeHTML(req.body.username),
+    email: sanitize.encodeHTML(req.body.email),
     password: req.body.password
   });
 
@@ -23,7 +25,7 @@ router.post('/register', (req, res, next) => {
 
 // Authenticate
 router.post('/authenticate', (req, res, next) => {
-  const username = req.body.username;
+  const username = sanitize.encodeHTML(req.body.username);
   const password = req.body.password;
 
 

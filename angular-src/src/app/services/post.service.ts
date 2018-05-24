@@ -12,12 +12,28 @@ export class PostService {
     this.loadToken();
     headers.append('Authorization', this.authToken);
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://localhost:3000/posts/getAllPosts',{headers: headers})
+    return this.http.get('https://167.99.246.26:3000/posts/getAllPosts',{headers: headers})
       .map(res => res.json());
   }
 
+  getCookie(cname) {
+   var name = cname + "=";
+   var decodedCookie = decodeURIComponent(document.cookie);
+   var ca = decodedCookie.split(';');
+   for(var i = 0; i <ca.length; i++) {
+       var c = ca[i];
+       while (c.charAt(0) == ' ') {
+           c = c.substring(1);
+       }
+       if (c.indexOf(name) == 0) {
+           return c.substring(name.length, c.length);
+       }
+   }
+   return "";
+}
+
   loadToken(){
-    const token = localStorage.getItem('id_token');
+    const token = this.getCookie("id_token");
     this.authToken = token;
   }
 

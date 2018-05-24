@@ -3,8 +3,24 @@ import { Observable } from 'rxjs/Observable';
 import * as socketIo from 'socket.io-client';
 
 export class SocketService {
-  token = localStorage.getItem('id_token');
-  private socket = socketIo('http://localhost:3000', {
+  getCookie(cname) {
+   var name = cname + "=";
+   var decodedCookie = decodeURIComponent(document.cookie);
+   var ca = decodedCookie.split(';');
+   for(var i = 0; i <ca.length; i++) {
+       var c = ca[i];
+       while (c.charAt(0) == ' ') {
+           c = c.substring(1);
+       }
+       if (c.indexOf(name) == 0) {
+           return c.substring(name.length, c.length);
+       }
+   }
+   return "";
+}
+
+  token = this.getCookie("id_token");
+  private socket = socketIo('https://167.99.246.26:3000', {
     query: {token: this.token}
   });
 
