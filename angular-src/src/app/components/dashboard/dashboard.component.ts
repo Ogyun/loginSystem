@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(private postService: PostService, private socketService: SocketService,private authService:AuthService) {}
 
   onRegisterSubmit() {
-    let user = JSON.parse(this.authService.getCookie('user'));
+    let user = this.authService.getCookie('user');
     let newPost = {
       username: user.username,
       post: this.msg,
