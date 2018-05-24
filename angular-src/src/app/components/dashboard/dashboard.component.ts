@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {PostService} from '../../services/post.service';
 import {SocketService} from '../../services/socket.service';
 import * as socketIo from 'socket.io-client';
+import {AuthService} from '../../services/auth.service';
+
 
 @Component({
   moduleId: module.id,
@@ -17,10 +19,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   username: String;
   msg: String;
 
-  constructor(private postService: PostService, private socketService: SocketService ) {}
+  constructor(private postService: PostService, private socketService: SocketService,private authService:AuthService) {}
 
   onRegisterSubmit() {
-    let user = JSON.parse(localStorage.getItem('user'));
+    let user = JSON.parse(this.authService.getCookie('user'));
     let newPost = {
       username: user.username,
       post: this.msg,
