@@ -34,11 +34,11 @@ module.exports = {
     // Payload
     let payload = { "sub" : user._id, "name" : user.username, "iat": expireDate};
     // Signature
-    let signature = CryptoJS.HmacSHA256(h + '.' + p, config.secret);
 
     // Encode token
     let h = Buffer.from(JSON.stringify(header)).toString('base64');
     let p = Buffer.from(JSON.stringify(payload)).toString('base64');
+    let signature = CryptoJS.HmacSHA256(h + '.' + p, config.secret);
 
     let newToken = Buffer.from(JSON.stringify(header)).toString('base64') +
                   "." + Buffer.from(JSON.stringify(payload)).toString('base64') +
