@@ -4,6 +4,7 @@ const config = require('./config/database');
 const sha256 = require('sha256');
 const cron = require('node-cron');
 const atob = require('atob');
+const CryptoJS = require("crypto-js");
 
 // Token array
 let tokenArr = [];
@@ -32,8 +33,8 @@ module.exports = {
     let header = { "alg" : "HS256", "typ" : "JWT"};
     // Payload
     let payload = { "sub" : user._id, "name" : user.username, "iat": expireDate};
-    // Secret
-    let secret = sha256(config.secret);
+    // Signature
+    let signature = CryptoJS.HmacSHA256(h + '.' + p, config.secret);
 
     // Encode token
     let h = Buffer.from(JSON.stringify(header)).toString('base64');
@@ -41,7 +42,7 @@ module.exports = {
 
     let newToken = Buffer.from(JSON.stringify(header)).toString('base64') +
                   "." + Buffer.from(JSON.stringify(payload)).toString('base64') +
-                  "." + secret;
+                  "." + signature;
 
     tokenArr.push(newToken)
     return newToken
