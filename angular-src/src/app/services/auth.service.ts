@@ -42,7 +42,7 @@ export class AuthService {
     let dateExpire = JSON.parse(atob(token.split(".")[1])).iat;
     let d = new Date(parseInt(dateExpire));
     document.cookie = "id_token=" + token + ";expires=" + d + ";" +"path=/"+ ";secure";//+"; HttpOnly ;secure";
-    document.cookie = "user="+ JSON.stringify(user) + ";expires=" + d+ ";secure";//+"; HttpOnly ;secure";
+    document.cookie = "user="+ JSON.stringify(user) + ";expires=" + d+ ";secure" +";HttpOnly";
     this.authToken = token;
     this.user = user;
   }
