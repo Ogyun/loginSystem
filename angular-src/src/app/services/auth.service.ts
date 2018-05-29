@@ -52,14 +52,14 @@ export class AuthService {
   loadToken(){
     //const token = this.getCookie("id_token");
       const token = localStorage.getItem('id_token');
-      if (token == null ){
+  //    if (token == null ){
 
           this.authToken = token;
-      }
-      else
-      {
-        return false;
-      }
+  //    }
+  //    else
+  //    {
+    //    return false;
+    //  }
   }
 
   loggedIn(){
