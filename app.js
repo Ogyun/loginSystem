@@ -32,16 +32,15 @@ mongoose.connection.on('error', (err) => {
   console.log('Database error : ' + err);
 });
 
-// Declare express variable
 
-/*
+// Certificates
 const options = {
   key: fs.readFileSync("/encryption/nginx-selfsigned.key"),
   cert: fs.readFileSync("/encryption/nginx-selfsigned.crt"),
   dhparam: fs.readFileSync("/encryption/dhparam.pem")
 };
-*/
 
+// Declare express variable
 const app = express();
 var server = https.createServer(options, app);
 var io = require('socket.io')(server);
@@ -84,7 +83,6 @@ io.use(function(socket, next){
 
 // Connection now authenticated to receive further events
 .on('connection', function(socket) {
-  console.log('new socket connection established')
 
   // On reciving a new message
   socket.on('send message', function (data) {
