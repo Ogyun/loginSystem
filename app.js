@@ -12,7 +12,6 @@ const CryptoJS = require("crypto-js");
 const Post = require('./models/post');
 const sha256 = require('sha256');
 const https = require("https");
-const http = require("http");
 const fs = require("fs");
 
 // DATABASE CONNECTION
@@ -44,7 +43,7 @@ const options = {
 */
 
 const app = express();
-var server = http.createServer(app);
+var server = https.createServer(options, app);
 var io = require('socket.io')(server);
 
 // Set Static Folder
