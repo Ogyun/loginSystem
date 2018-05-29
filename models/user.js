@@ -42,14 +42,13 @@ module.exports.failedLogin = (user) => {
   let currentDate = new Date();
 
   if(user.loginAttempts == 3) {
-
       User.update({username : user.username}, {lockUntil : currentDate.setMinutes(currentDate.getMinutes() + 30)}, (err, res) => {
         if (err) throw err
         else return true;
       });
   }
 
-  else if(user.lastLogin > currentDate.setMinutes(currentDate.getMinutes() + 5)) {
+  else if(user.lastLogin > currentDate.setMinutes(currentDate.getMinutes() - 5)) {
     User.update({username : user.username}, {$inc: {loginAttempts: 1}}, (err, res) => {
       if(err) throw err
       else User.updateLogin(user.username)
@@ -63,6 +62,8 @@ module.exports.failedLogin = (user) => {
   }
 }
 
+
+
 module.exports.resetLoginCount = (username) => {
   User.update({username : username}, {loginAttempts: 0}, (err, res) => {
     if(err) throw err
@@ -71,7 +72,7 @@ module.exports.resetLoginCount = (username) => {
 }
 
 module.exports.updateLogin = (username) => {
-    User.update({username : this.username}, {lastLogin : new Date()}, (err, res) => {
+    User.update({username : username}, {lastLogin : Date.now()}, (err, res) => {
       if(err) throw err
       else return true;
     })
