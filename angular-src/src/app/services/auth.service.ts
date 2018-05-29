@@ -39,16 +39,19 @@ export class AuthService {
  }
 
   storeUserData(token, user){
-    let dateExpire = JSON.parse(atob(token.split(".")[1])).iat;
-    let d = new Date(parseInt(dateExpire));
-    document.cookie = "id_token=" + token + ";expires=" + d + ";" +"path=/"+ ";secure";//+"; HttpOnly ;secure";
-    document.cookie = "user="+ JSON.stringify(user) + ";expires=" + d+ ";secure";// +";HttpOnly";
+    // let dateExpire = JSON.parse(atob(token.split(".")[1])).iat;
+    // let d = new Date(parseInt(dateExpire));
+    // document.cookie = "id_token=" + token + ";expires=" + d + ";" +"path=/"+ ";secure";//+"; HttpOnly ;secure";
+    // document.cookie = "user="+ JSON.stringify(user) + ";expires=" + d+ ";secure";// +";HttpOnly";
+    localStorage.setItem('id_token', token);
+    localStorage.setItem('user', JSON.stringify(user));
     this.authToken = token;
     this.user = user;
   }
 
   loadToken(){
-    const token = this.getCookie("id_token");
+    //const token = this.getCookie("id_token");
+      const token = localStorage.getItem('id_token');
       if (token == null ){
 
           this.authToken = token;
@@ -71,8 +74,9 @@ export class AuthService {
   logout(){
     this.authToken = null;
     this.user = null;
-    document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie="user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    localStorage.clear();
+    // document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // document.cookie="user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   }
 
 }
