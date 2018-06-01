@@ -8,7 +8,6 @@ const sha256 = require('sha256');
 
 // Create a new post
 router.post('/post', function(req, res, next) {
-
   if(req.headers.authorization =! null && tokens.verifyToken(req.headers.authorization)) {
     next();
   } else {
@@ -28,9 +27,9 @@ router.post('/post', function(req, res, next) {
 
   Post.addPost(newPost, (err, post) => {
     if(err) {
-      res.json({succes: false, msg:'Failed to register post'});
+      res.json({success: false, msg:'Failed to register post'});
     } else {
-      res.json({succes: true, msg:'Post registered'});
+      res.json({success: true, msg:'Post registered'});
     }
   });
 
@@ -38,12 +37,21 @@ router.post('/post', function(req, res, next) {
 
 // Get all posts
 router.get('/getAllPosts', function(req, res, next) {
+  if(req.cookies.Auth =! null && tokens.verifyToken(req.cookies.Auth)) {
+    next();
+  } else {
+    res.send('Authorization failed!');
+  }
 
+  /*
   if(req.headers.authorization =! null && tokens.verifyToken(req.headers.authorization)) {
     next();
   } else {
     res.send('Authorization failed!');
   }
+  */
+
+
 }, (req, res, next) => {
   Post.getAllPosts((err, posts) => {
     if (err) {

@@ -45,6 +45,9 @@ router.post('/authenticate', (req, res, next) => {
           User.resetLoginCount(user.username);
           const token = tokens.signUser(user);
 
+          // cookie test;
+          res.cookie('Auth', token, {maxAge: 2*60*60*1000, httpOnly: true});
+
           res.json({
             success: true,
             token: token,
@@ -63,12 +66,12 @@ router.post('/authenticate', (req, res, next) => {
   });
 });
 
-router.post('/validateToken', (req, res, next) => {
-  const token = req.body.token
+router.get('/validateToken', (req, res, next) => {
+  const token = req.cookies.Auth
   if(tokens.verifyToken(token)) {
-    return res.json({success: true})
+    res.json({success: true})
   } else {
-    return res.json({success: false})
+    res.json({success: false})
   }
 });
 

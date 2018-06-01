@@ -24,13 +24,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
   onRegisterSubmit() {
     //let user = JSON.parse(this.authService.getCookie('user'));
     let user = JSON.parse(localStorage.getItem('user'));
-    console.log(user);
     let newPost = {
       username: user.username,
       post: this.msg,
       date: new Date()
     }
-    this.socketService.sendMessage(newPost);
+
+    console.log(this.msg.length);
+
+    if(this.msg.length == 0) {
+      //this.flashMessage.show('Please insert a message!', {cssClass:'alert-danger', timeout:3000});
+    } else {
+      this.socketService.sendMessage(newPost);
+    }
   }
 
   ngOnInit() {
