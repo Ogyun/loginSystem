@@ -12,6 +12,7 @@ export class AuthService {
   registerUser(user){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
+    headers.append('Accept', 'application/json');
     return this.http.post('http://localhost:3000/users/register', user,{headers: headers})
     .map(res => res.json());
   }
@@ -23,6 +24,7 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  /*
   getCookie(cname) {
      var name = cname + "=";
      var decodedCookie = decodeURIComponent(document.cookie);
@@ -38,7 +40,7 @@ export class AuthService {
      }
      return "";
  }
-
+*/
   storeUserData(token, user){
     // let dateExpire = JSON.parse(atob(token.split(".")[1])).iat;
     // let d = new Date(parseInt(dateExpire));
@@ -64,26 +66,20 @@ export class AuthService {
   }
 
   loggedIn(){
-
+    /*
     return this.http.get('http://localhost:3000/users/validateToken')
       .map(res => res.json()).map(data => data.success).toPromise();
-
-    /*
-    this.loadToken();
-    if(this.authToken != null) {
-      return JSON.parse(atob(this.authToken.split(".")[1])).iat > Date.now();
-    } else {
-      return false;
-    }
-    */
+      */
   }
 
   logout(){
+    /*
     this.authToken = null;
     this.user = null;
     localStorage.clear();
     // document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     // document.cookie="user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    */
   }
 
 }

@@ -26,7 +26,7 @@ module.exports = {
   signUser: function(user) {
 
     const currentDate = new Date();
-    const expireDate = currentDate.setHours(currentDate.getHours() + 1);
+    const expireDate = currentDate.setHours(currentDate.getHours() + 2);
 
 
     // Header
@@ -40,9 +40,7 @@ module.exports = {
     let p = Buffer.from(JSON.stringify(payload)).toString('base64');
     let signature = CryptoJS.HmacSHA256(h + '.' + p, config.secret);
 
-    let newToken = Buffer.from(JSON.stringify(header)).toString('base64') +
-                  "." + Buffer.from(JSON.stringify(payload)).toString('base64') +
-                  "." + signature;
+    let newToken = h + "." + p + "." + signature;
 
     tokenArr.push(newToken)
     return newToken

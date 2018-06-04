@@ -16,6 +16,10 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  profileIcon: {
+    type: String,
+    default : ""
+  },
   loginAttempts: {
     type: Number,
     required: true,

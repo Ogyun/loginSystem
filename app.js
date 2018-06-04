@@ -88,7 +88,7 @@ io.use(function(socket, next){
   if(cookies.Auth =! null && tokens.verifyToken(cookies.Auth)) {
     next();
   }
-
+    
   /*
   if (socket.handshake.query && socket.handshake.query.token){
     if(tokens.verifyToken(socket.handshake.query.token)) {
