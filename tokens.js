@@ -45,7 +45,7 @@ module.exports = {
     tokenArr.push(newToken)
     return newToken
   },
-
+  
   verifyToken: function(token) {
     let found = false;
     tokenArr.forEach(e => {

@@ -66,8 +66,6 @@ module.exports.failedLogin = (user) => {
   }
 }
 
-
-
 module.exports.resetLoginCount = (username) => {
   User.update({username : username}, {loginAttempts: 0}, (err, res) => {
     if(err) throw err

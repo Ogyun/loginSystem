@@ -88,7 +88,7 @@ io.use(function(socket, next){
   if(cookies.Auth =! null && tokens.verifyToken(cookies.Auth)) {
     next();
   }
-    
+
   /*
   if (socket.handshake.query && socket.handshake.query.token){
     if(tokens.verifyToken(socket.handshake.query.token)) {
@@ -107,10 +107,12 @@ io.use(function(socket, next){
   socket.on('send message', function (data) {
     let encryptedPost = CryptoJS.AES.encrypt(JSON.stringify(data.post), config.secret);
 
+    console.log(socket.handshake.headers.cookie); // get user from here
+
     let newPost = new Post ({
       username: data.username,
       post: data.post,
-      date: data.date,
+      date: data.date,  // generate date on server
       checksum: ""
     });
 
@@ -121,7 +123,7 @@ io.use(function(socket, next){
     newPost.post = encryptedPost
 
     // Add checksum
-    newPost.checksum = sha256(encryptedPost.toString()); // Use bcrypt
+    newPost.checksum = sha256(encryptedPost.toString()); // Use bcrypt with secret
 
     // Save post in db.
     Post.addPost(newPost, (err, post) => {
