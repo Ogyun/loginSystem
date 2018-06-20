@@ -6,18 +6,6 @@ const cron = require('node-cron');
 const atob = require('atob');
 const CryptoJS = require("crypto-js");
 
-// Token array
-let tokenArr = [];
-
-// Clean up dead tokens scheduled task
-cron.schedule('* * * * *', function(){
-  console.log('running a task every minute');
-  tokenArr.forEach( (e, index) => {
-    if(e.expires <  new Date()) {
-      tokenArr.splice(index, 1)
-    }
-  });
-});
 
 // Exported methods
 module.exports = {
@@ -26,7 +14,7 @@ module.exports = {
   signUser: function(user) {
 
     const currentDate = new Date();
-    const expireDate = currentDate.setHours(currentDate.getHours() + 2);
+    const expireDate = currentDate.setHours(currentDate.getHours() + 1);
 
 
     // Header
@@ -35,30 +23,37 @@ module.exports = {
     let payload = { "sub" : user._id, "name" : user.username, "iat": expireDate};
     // Signature
 
-    // Encode token
+    // Encode header and payload
     let h = Buffer.from(JSON.stringify(header)).toString('base64');
     let p = Buffer.from(JSON.stringify(payload)).toString('base64');
+
+    //Signature
     let signature = CryptoJS.HmacSHA256(h + '.' + p, config.secret);
 
+    //Token
     let newToken = h + "." + p + "." + signature;
 
-    tokenArr.push(newToken)
+
     return newToken
   },
-  
   verifyToken: function(token) {
-    let found = false;
-    tokenArr.forEach(e => {
-      if(e === token) {
-        payload = JSON.parse(atob(token.split(".")[1]));
-        if (payload.iat > Date.now()) {
-          found = true;
-        } else {
-          // remove dead token
-        }
-      }
-    })
-    return found;
-  }
+      let found = false;
+        encodedHeader = token.split(".")[0];
+         encodedPayload = token.split(".")[1];
+         signature = token.split(".")[2];
+         signatureCandidate = CryptoJS.HmacSHA256(encodedHeader + '.' + encodedPayload,config.secret).toString(CryptoJS.enc.Hex);
+         if(signatureCandidate == signature){
+           found = true;
+         }
+         else
+         {
+           console.log("token tampered!")
+           found = false;
+
+
+         }
+           return found;
+
+    }
 
 };

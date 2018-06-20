@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const config = require('../config/database');
+var Request = require("request");
 
 // User Schema
 const userSchema = mongoose.Schema({
@@ -29,6 +30,12 @@ const userSchema = mongoose.Schema({
     type: Number
   },
   lockUntil: {
+    type: Number
+  },
+  pwdResetCode:{
+    type: String
+  },
+  codeExpire:{
     type: Number
   }
 });
@@ -115,3 +122,67 @@ module.exports.comparePassword = function(candidatePassword, hash, callback) {
     callback(null, isMatch);
   });
 };
+
+module.exports.updatePassword = function(user, callback) {
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(user.password, salt, (err, hash) => {
+      if (err) throw err;
+      else {
+        console.log(user.username);
+        let query = {
+          username: user.username
+        };
+        User.update(query, {password: hash, $unset: { pwdResetCode:"", codeExpire:"" }}, callback);
+
+      }
+    });
+
+  });
+}
+module.exports.verifyResetCode = (code, callback) => {
+  const query = { pwdResetCode: code};
+  User.findOne(query, callback);
+}
+
+module.exports.isCodeExpired = (user) => {
+  if(Date.now() > user.codeExpire ) return true;
+  else return false;
+}
+
+module.exports.resetExpireCode = function(user,callback){
+  let query = {
+    username: user.username
+  };
+  User.update(query, {$unset: { pwdResetCode:"", codeExpire:"" }}, callback);
+}
+
+module.exports.validatePassword = function(password){
+    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+    return re.test(password);
+}
+module.exports.validateEmail = function(email){
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+module.exports.callEmailApi = function(mail, callback){
+  Request.post({
+    "headers": { "content-type": "application/json" },
+    "url": "http://localhost:1598/api/Mail/sendMail",
+    "body": JSON.stringify(
+      {
+        To: mail.To,
+        Body: mail.Body,
+        Subject: mail.Subject
+    })
+}, callback
+  );
+}
+
+module.exports.setPwdResetCode = function(user, callback) {
+    let currentDate = new Date();
+        let query = {
+          username: user.username
+        };
+        User.update(query, {pwdResetCode: user.pwdResetCode, codeExpire: currentDate.setMinutes(currentDate.getMinutes() + 10)}, callback);
+
+}

@@ -84,7 +84,7 @@ io.use(function(socket, next){
   // Authentication
   const cookie = require('cookie');
   let cookies = cookie.parse(socket.handshake.headers.cookie)
-
+console.log(cookies);
   if(cookies.Auth =! null && tokens.verifyToken(cookies.Auth)) {
     next();
   }
