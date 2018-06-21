@@ -18,9 +18,16 @@ module.exports = {
 
 
     // Header
-    let header = { "alg" : "HS256", "typ" : "JWT"};
+    let header = {
+      "alg": "HS256",
+      "typ": "JWT"
+    };
     // Payload
-    let payload = { "sub" : user._id, "name" : user.username, "iat": expireDate};
+    let payload = {
+      "sub": user._id,
+      "name": user.username,
+      "iat": expireDate
+    };
     // Signature
 
     // Encode header and payload
@@ -37,23 +44,27 @@ module.exports = {
     return newToken
   },
   verifyToken: function(token) {
-      let found = false;
-        encodedHeader = token.split(".")[0];
-         encodedPayload = token.split(".")[1];
-         signature = token.split(".")[2];
-         signatureCandidate = CryptoJS.HmacSHA256(encodedHeader + '.' + encodedPayload,config.secret).toString(CryptoJS.enc.Hex);
-         if(signatureCandidate == signature){
-           found = true;
-         }
-         else
-         {
-           console.log("token tampered!")
-           found = false;
+    let found = false;
+    try {
+
+      encodedHeader = token.split(".")[0];
+      encodedPayload = token.split(".")[1];
+      signature = token.split(".")[2];
+      signatureCandidate = CryptoJS.HmacSHA256(encodedHeader + '.' + encodedPayload, config.secret).toString(CryptoJS.enc.Hex);
+      if (signatureCandidate == signature) {
+        found = true;
+      } else {
+        console.log("token tampered!")
+        found = false;
 
 
-         }
-           return found;
+      }
+      return found;
+    } catch (err) {
+      console.error("This is the error: "+ err);
+      return found;
 
     }
+  }
 
 };
