@@ -42,75 +42,72 @@ router.post('/register', (req, res, next) => {
   const email = sanitize.encodeHTML(req.body.email);
   const password = req.body.password;
 
-
-
-  // check if user or email already exsist.
-  // dobbel check if password is 'strong' and email is correct format
   if (!username || !email || !password) {
     return res.json({
       success: false,
       msg: 'All fields must be filled out'
     });
   } else {
-    if (!User.validateEmail(email)){
+    if (!User.validateEmail(email)) {
       return res.json({
-      success: false,
-      msg: 'Please use a valid email address'
+        success: false,
+        msg: 'Please use a valid email address'
+      });
+    }
+    if (!User.validatePassword(password)) {
+      return res.json({
+        success: false,
+        msg: "Password must contain a number, lower and uppercase letter and be atleast 8 characters long "
+      });
+    }
+
+    let newUser = new User({
+      username: username,
+      email: email,
+      password: password
     });
-  }
-  if (!User.validatePassword(password)){
-    return res.json({
-    success: false,
-    msg: "Password must contain a number, lower and uppercase letter and be atleast 8 characters long "
-  });
-  }
-
-  let newUser = new User({
-    username: username,
-    email: email,
-    password: password
-  });
 
 
-  User.getUserByUsername(newUser.username, (err, user) => {
+    User.getUserByUsername(newUser.username, (err, user) => {
       if (err) throw err
 
       // check if username is avaiable
       if (user != null) {
         return res.json({
           success: false,
-          msg: 'username already in use'
+          msg: 'Username or email already in use'
         })
       } else {
 
         // check if email is avaiable
-        User.getUserByEmail(req.body.email, (err, email) => {
+        User.getUserByEmail(newUser.email, (err, email) => {
           if (err) throw err
           if (email != null) {
             return res.json({
               success: false,
-              msg: 'email already in use'
+              msg: 'Username or email already in use'
             })
+          } else {
+
+            // Add user
+            User.addUser(newUser, (err, user) => {
+              if (err) {
+                res.json({
+                  success: false,
+                  msg: 'Failed to register user'
+                });
+              } else {
+                res.json({
+                  success: true,
+                  msg: 'User registered'
+                });
+              }
+            });
           }
         })
       }
     })
-
-  // Add user
-  User.addUser(newUser, (err, user) => {
-    if (err) {
-      res.json({
-        success: false,
-        msg: 'Failed to register user'
-      });
-    } else {
-      res.json({
-        success: true,
-        msg: 'User registered'
-      });
-    }
-  });
-}
+  }
 });
 
 // Authenticate
@@ -124,60 +121,16 @@ router.post('/authenticate', (req, res, next) => {
       msg: 'All fields must be filled out'
     });
   } else {
-  if (User.validatePassword(password)){
-  // Does user exsist
-  User.getUserByUsername(username, (err, user) => {
-    if (err) throw err;
-    if (!user) {
-      return res.json({
-        success: false,
-        msg: 'Wrong password or username'
-      });
-    }
-
-    // Is user currently locked
-    if (User.isLocked(user)) {
-      return res.json({
-        success: false,
-        msg: 'Too many failed login attempts, account is locked untill: ' + new Date(user.lockUntil)
-      })
-    }
-
-    // Does the password match
-    User.comparePassword(password, user.password, (err, isMatch) => {
-      if (err) throw err;
-      if (isMatch) {
-
-        User.resetLoginCount(user.username);
-
-        const token = tokens.signUser(user);
-
-        // Set cookies
-        res.cookie('Auth', token, {
-          maxAge: 2 * 60 * 60 * 1000,
-          httpOnly: true
-        });
-
-        let userInfo = {
-          id: user._id,
-          email: user.email,
-          username: user.username,
-          profileIcon: user.profileIcon
+    if (User.validatePassword(password)) {
+      // Does user exsist
+      User.getUserByUsername(username, (err, user) => {
+        if (err) throw err;
+        if (!user) {
+          return res.json({
+            success: false,
+            msg: 'Wrong password or username'
+          });
         }
-
-        res.cookie('User', JSON.stringify(userInfo), {
-          maxAge: 2 * 60 * 60 * 1000,
-          httpOnly: true
-        });
-
-        res.json({
-          success: true,
-          msg: 'You are logged in!'
-        });
-      } else {
-
-        // Wrong password
-        User.failedLogin(user);
 
         // Is user currently locked
         if (User.isLocked(user)) {
@@ -187,20 +140,64 @@ router.post('/authenticate', (req, res, next) => {
           })
         }
 
-        return res.json({
-          success: false,
-          msg: 'Wrong password or username'
+        // Does the password match
+        User.comparePassword(password, user.password, (err, isMatch) => {
+          if (err) throw err;
+          if (isMatch) {
+
+            User.resetLoginCount(user.username);
+
+            const token = tokens.signUser(user);
+
+            // Set cookies
+            res.cookie('Auth', token, {
+              maxAge: 2 * 60 * 60 * 1000,
+              httpOnly: true
+            });
+
+            let userInfo = {
+              id: user._id,
+              email: user.email,
+              username: user.username,
+              profileIcon: user.profileIcon
+            }
+
+            res.cookie('User', JSON.stringify(userInfo), {
+              maxAge: 2 * 60 * 60 * 1000,
+              httpOnly: true
+            });
+
+            res.json({
+              success: true,
+              msg: 'You are logged in!'
+            });
+          } else {
+
+            // Wrong password
+            User.failedLogin(user);
+
+            // Is user currently locked
+            if (User.isLocked(user)) {
+              return res.json({
+                success: false,
+                msg: 'Too many failed login attempts, account is locked untill: ' + new Date(user.lockUntil)
+              })
+            }
+
+            return res.json({
+              success: false,
+              msg: 'Wrong password or username'
+            });
+          }
         });
-      }
-    });
-  });
-  } else {
-    return res.json({
-      success: false,
-      msg: "Password must contain a number, lower and uppercase letter and be atleast 8 characters long "
-    });
+      });
+    } else {
+      return res.json({
+        success: false,
+        msg: "Password must contain a number, lower and uppercase letter and be atleast 8 characters long "
+      });
+    }
   }
-}
 });
 
 // Validiate a JWT token.
@@ -309,7 +306,7 @@ router.post('/forgotPassword', (req, res, next) => {
       if (!user) {
         return res.json({
           success: false,
-          msg: 'No user with this email exist'  // return res.redirect('/forgotPassword');
+          msg: 'No user with this email exist' // return res.redirect('/forgotPassword');
         });
       } else {
         let randomCode = Math.random().toString(36).slice(-8);
@@ -357,7 +354,7 @@ router.post('/forgotPassword', (req, res, next) => {
 
 // Get all users
 router.get('/getAllUsers', function(req, res, next) {
-  if(req.cookies.Auth =! null && tokens.verifyToken(req.cookies.Auth) && tokens.checkIfAdmin(req.cookies.Auth)) {
+  if (req.cookies.Auth = !null && tokens.verifyToken(req.cookies.Auth) && tokens.checkIfAdmin(req.cookies.Auth)) {
     next();
   } else {
     res.send('Authorization failed!');
@@ -366,17 +363,22 @@ router.get('/getAllUsers', function(req, res, next) {
 }, (req, res, next) => {
   User.getAllUsers((err, users) => {
     if (err) {
-      res.json({succes: false, msg:'Failed to get users'});
-    }
-    else {
-      res.json({success: true, users});
+      res.json({
+        succes: false,
+        msg: 'Failed to get users'
+      });
+    } else {
+      res.json({
+        success: true,
+        users
+      });
     };
   });
 });
 
 // Delete user
 router.post('/deleteUser', function(req, res, next) {
-  if(req.cookies.Auth =! null && tokens.verifyToken(req.cookies.Auth) && tokens.checkIfAdmin(req.cookies.Auth)) {
+  if (req.cookies.Auth = !null && tokens.verifyToken(req.cookies.Auth) && tokens.checkIfAdmin(req.cookies.Auth)) {
     next();
   } else {
     res.send('Authorization failed!');
@@ -384,12 +386,17 @@ router.post('/deleteUser', function(req, res, next) {
 
 }, (req, res, next) => {
   const username = req.body.username;
-  User.deleteUserByUsername(username,(err, users) => {
+  User.deleteUserByUsername(username, (err, users) => {
     if (err) {
-      res.json({succes: false, msg:'Failed to delete user'});
-    }
-    else {
-      res.json({success: true, msg:'User is successfully deleted'});
+      res.json({
+        succes: false,
+        msg: 'Failed to delete user'
+      });
+    } else {
+      res.json({
+        success: true,
+        msg: 'User is successfully deleted'
+      });
     };
   });
 });
