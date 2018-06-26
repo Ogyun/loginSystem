@@ -42,6 +42,8 @@ router.post('/register', (req, res, next) => {
   const email = sanitize.encodeHTML(req.body.email);
   const password = req.body.password;
 
+
+
   // check if user or email already exsist.
   // dobbel check if password is 'strong' and email is correct format
   if (!username || !email || !password) {
@@ -62,18 +64,38 @@ router.post('/register', (req, res, next) => {
     msg: "Password must contain a number, lower and uppercase letter and be atleast 8 characters long "
   });
   }
-  if (!User.isUsernameAndEmailAvailable(newUser.username, newUser.email)) {
-    return res.json({
-      success: false,
-      msg: 'Username or email already in use'
-    })
-  }
 
   let newUser = new User({
     username: username,
     email: email,
     password: password
   });
+
+
+  User.getUserByUsername(newUser.username, (err, user) => {
+      if (err) throw err
+
+      // check if username is avaiable
+      if (user != null) {
+        return res.json({
+          success: false,
+          msg: 'username already in use'
+        })
+      } else {
+
+        // check if email is avaiable
+        User.getUserByEmail(req.body.email, (err, email) => {
+          if (err) throw err
+          if (email != null) {
+            return res.json({
+              success: false,
+              msg: 'email already in use'
+            })
+          }
+        })
+      }
+    })
+
   // Add user
   User.addUser(newUser, (err, user) => {
     if (err) {
