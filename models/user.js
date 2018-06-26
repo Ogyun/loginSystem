@@ -236,7 +236,7 @@ module.exports.callEmailApi = function(mail, callback) {
     "headers": {
       "content-type": "application/json"
     },
-    "url": "http://localhost:1598/api/Mail/sendMail",
+    "url": "http://ogyun.azurewebsites.net/api/Mail/sendMail",
     "body": JSON.stringify({
       To: mail.To,
       Body: mail.Body,
