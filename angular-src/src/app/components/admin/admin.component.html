@@ -1,4 +1,4 @@
-<h2 class="page-header">Login</h2>
+<h2 class="page-header">Admin</h2>
 <form (submit)="onLoginSubmit()">
   <div class="form-group">
     <label>Username</label>
@@ -7,7 +7,6 @@
   <div class="form-group">
     <label>Password</label>
     <input type="password" class="form-control" [(ngModel)]="password" name="password">
-    <a [routerLink]="['/forgotPassword']">Forgot your password ? </a>
   </div>
   <input type="submit" class="btn btn-primary" value="Login">
 </form>

@@ -7,6 +7,7 @@ export class AuthService {
   authToken: any;
   user: any;
   public testLogin = false;
+  public testAdmin = false;
 
   constructor(private http:Http) { }
 
@@ -24,6 +25,32 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  deleteUser(username){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/deleteUser', username,{headers: headers})
+    .map(res => res.json());
+  }
+  getAllUsers(){
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.get('http://localhost:3000/users/getAllUsers',{headers: headers})
+      .map(res => res.json());
+  }
+  sendNewPassword(mail){
+  let headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  return this.http.post('http://localhost:3000/users/forgotPassword', mail,{headers: headers})
+  .map(res => res.json());
+  }
+
+  changePassword(newPassword){
+  let headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  return this.http.post('http://localhost:3000/users/changePassword', newPassword,{headers: headers})
+  .map(res => res.json());
+  }
+
   storeUserData(token, user){
     localStorage.setItem('id_token', token);
     localStorage.setItem('user', JSON.stringify(user));
@@ -38,6 +65,11 @@ export class AuthService {
 
   loggedIn() {
     return this.http.get('http://localhost:3000/users/validateToken')
+      .map(res => res.json()).map(data => data.success);
+  }
+
+  checkIfAdmin() {
+    return this.http.get('http://localhost:3000/users/validateAdmin')
       .map(res => res.json()).map(data => data.success);
   }
 

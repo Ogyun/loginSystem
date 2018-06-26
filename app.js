@@ -16,6 +16,7 @@ const http = require("http");
 const fs = require("fs");
 const cookieParser = require('cookie-parser');
 const cookie = require('cookie');
+const User = require('./models/user')
 
 // DATABASE CONNECTION
 
@@ -80,12 +81,29 @@ server.listen(port, () => {
   console.log('Server startet on port ' + port);
 });
 
+
+// let newAdmin = new User({
+//   username:"admin",
+//   email:"ogyun95@gmail.com",
+//   password:"Oo123456",
+//   isAdmin:true
+// });
+//
+// User.addUser(newAdmin,(err, admin) => {
+//   if (err) {
+//       console.log(err)
+//   } else {
+//     console.log("Success")
+//   }
+// });
+
 // IO Socket connection
 io.use(function(socket, next){
 
   // Authentication
   const cookie = require('cookie');
   let cookies = cookie.parse(socket.handshake.headers.cookie)
+//console.log(cookies);
 
   if(cookies.Auth =! null && tokens.verifyToken(cookies.Auth)) {
     next();

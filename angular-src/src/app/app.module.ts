@@ -19,12 +19,27 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
 import { PostService } from './services/post.service';
 
+import {ValidateService} from './services/validate.service';
+import {AuthService} from './services/auth.service';
+import{FlashMessagesModule} from 'angular2-flash-messages';
+import{AuthGuard} from  './guards/auth.guard';
+import{AdminGuard} from  './guards/admin.guard';
+import {PostService} from './services/post.service';
+import { AdminComponent } from './components/admin/admin.component';
+import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
+
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'register', component: RegisterComponent, pathMatch: 'full' },
-  { path: 'login', component: LoginComponent, pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate: [AuthGuard] },
-  { path: 'profile', component: ProfileComponent, pathMatch: 'full', canActivate: [AuthGuard] }
+  {path: '', component: HomeComponent, pathMatch: 'full'},
+  {path: 'register', component: RegisterComponent, pathMatch: 'full'},
+  {path: 'login', component: LoginComponent, pathMatch: 'full'},
+  {path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate:[AuthGuard]},
+  {path: 'profile', component: ProfileComponent, pathMatch: 'full', canActivate:[AuthGuard]},
+  {path: 'loginAdmin', component: AdminComponent, pathMatch: 'full'},
+  {path: 'adminDashboard', component: AdminDashboardComponent, pathMatch: 'full', canActivate:[AdminGuard]},
+  {path: 'forgotPassword', component: ForgotPasswordComponent, pathMatch: 'full'},
+  {path: 'changePassword', component: ChangePasswordComponent, pathMatch: 'full'},
 ]
 
 @NgModule({
@@ -35,8 +50,12 @@ const appRoutes: Routes = [
     HomeComponent,
     DashboardComponent,
     ProfileComponent,
-    NavbarComponent,
     FileSelectDirective
+    NavbarComponent,
+    AdminComponent,
+    AdminDashboardComponent,
+    ForgotPasswordComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +64,7 @@ const appRoutes: Routes = [
     FormsModule,
     FlashMessagesModule.forRoot()
   ],
-  providers: [ValidateService, AuthService, AuthGuard, PostService],
+  providers: [ValidateService,AuthService,AuthGuard,AdminGuard,PostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

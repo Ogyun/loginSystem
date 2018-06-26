@@ -1,0 +1,11 @@
+<h1 style="text-align: center;">Welcome to your dashboard</h1>
+<div class="container" style="width:500px; margin-top:50px;">
+<ul class="list-group">
+  <div *ngFor="let user of users">
+
+      <li class="list-group-item list-group-item-action text-center " data-toggle="tooltip">{{user.username}}&nbsp;
+        <button type="button" class="btn btn-light " style="cursor: pointer;" (click)="deleteUser(user.username)"> Delete</button>
+      </li>
+  </div>
+</ul>
+</div>
