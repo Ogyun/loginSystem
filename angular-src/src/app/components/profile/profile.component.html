@@ -1,1 +1,25 @@
-<p>  Edit profile </p>
+<h3>  Edit profile </h3>
+
+<p> username : {{username}} </p>
+<p> email : {{email}} </p>
+<p> profile image </p>
+<img src="http://localhost:3000/images/{{profileIcon}}" alt="user profile icon" height="128" width="128">
+
+<!--
+
+<form action="http://localhost:3000/users/fileupload" method="post" enctype="multipart/form-data">
+  <input type="file" name="filetoupload"><br>
+  <input type="submit">
+</form>
+
+-->
+
+<input type="file" name="photo" ng2FileSelect [uploader]="uploader" />
+
+<!-- button to trigger the file upload when submitted -->
+<button type="button" class="btn btn-success btn-s" (click)="uploader.uploadAll()"
+        [disabled]="!uploader.getNotUploadedItems().length">
+
+      Save new profile picture
+
+</button>

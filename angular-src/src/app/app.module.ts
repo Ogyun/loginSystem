@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import{RouterModule, Routes} from  '@angular/router';
-import { FormsModule} from '@angular/forms';
-
+import { RouterModule, Routes } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { FileSelectDirective } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -13,21 +13,19 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 
-
-import {ValidateService} from './services/validate.service';
-import {AuthService} from './services/auth.service';
-import{FlashMessagesModule} from 'angular2-flash-messages';
-import{AuthGuard} from  './guards/auth.guard';
-import {PostService} from './services/post.service';
+import { ValidateService } from './services/validate.service';
+import { AuthService } from './services/auth.service';
+import { FlashMessagesModule } from 'angular2-flash-messages';
+import { AuthGuard } from './guards/auth.guard';
+import { PostService } from './services/post.service';
 
 const appRoutes: Routes = [
-  {path: '', component: HomeComponent, pathMatch: 'full'},
-  {path: 'register', component: RegisterComponent, pathMatch: 'full'},
-  {path: 'login', component: LoginComponent, pathMatch: 'full'},
-  {path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate:[AuthGuard]},
-  {path: 'profile', component: ProfileComponent, pathMatch: 'full', canActivate:[AuthGuard]}
+  { path: '', component: HomeComponent, pathMatch: 'full' },
+  { path: 'register', component: RegisterComponent, pathMatch: 'full' },
+  { path: 'login', component: LoginComponent, pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent, pathMatch: 'full', canActivate: [AuthGuard] }
 ]
-
 
 @NgModule({
   declarations: [
@@ -37,7 +35,8 @@ const appRoutes: Routes = [
     HomeComponent,
     DashboardComponent,
     ProfileComponent,
-    NavbarComponent
+    NavbarComponent,
+    FileSelectDirective
   ],
   imports: [
     BrowserModule,
@@ -46,7 +45,7 @@ const appRoutes: Routes = [
     FormsModule,
     FlashMessagesModule.forRoot()
   ],
-  providers: [ValidateService,AuthService,AuthGuard,PostService],
+  providers: [ValidateService, AuthService, AuthGuard, PostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

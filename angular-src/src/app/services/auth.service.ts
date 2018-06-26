@@ -29,7 +29,7 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
     this.authToken = token;
     this.user = user;
-    }
+  }
 
   loadToken() {
     const token = localStorage.getItem('id_token');
@@ -42,9 +42,14 @@ export class AuthService {
   }
 
   logout() {
-    this.authToken = null;
-    this.user = null;
-    localStorage.clear();
+    return this.http.get('http://localhost:3000/users/logout')
+      .map(res => res.json());
+  }
+
+
+  getProfile() {
+    return this.http.get('http://localhost:3000/users/profile')
+      .map(res => res.json());
   }
 
 }

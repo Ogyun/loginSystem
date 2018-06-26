@@ -15,6 +15,7 @@ const https = require("https");
 const http = require("http");
 const fs = require("fs");
 const cookieParser = require('cookie-parser');
+const cookie = require('cookie');
 
 // DATABASE CONNECTION
 
@@ -55,6 +56,7 @@ var io = require('socket.io')(server);
 
 // Set Static Folder
 app.use(express.static(path.join(__dirname, './angular-src/dist')));
+app.use(express.static('public'));
 
 // CORS Middleware
 app.use(cors());
@@ -89,14 +91,6 @@ io.use(function(socket, next){
     next();
   }
 
-  /*
-  if (socket.handshake.query && socket.handshake.query.token){
-    if(tokens.verifyToken(socket.handshake.query.token)) {
-      next();
-    }
-  }
-  */
-
   next(new Error('Authentication error'));
 })
 
@@ -107,16 +101,19 @@ io.use(function(socket, next){
   socket.on('send message', function (data) {
     let encryptedPost = CryptoJS.AES.encrypt(JSON.stringify(data.post), config.secret);
 
-    console.log(socket.handshake.headers.cookie); // get user from here
+    let cookies = cookie.parse(socket.handshake.headers.cookie)
+
+    let user = JSON.parse(cookies.User);
 
     let newPost = new Post ({
-      username: data.username,
+      username: user.username,
       post: data.post,
-      date: data.date,  // generate date on server
-      checksum: ""
+      date: data.date, // generate date on server
+      checksum: "",
+      imageUrl: user.profileIcon
     });
 
-    // Broadcast post to clients
+    // Broadcast message to clients
     io.emit('receive message', newPost);
 
     // Encrypt post

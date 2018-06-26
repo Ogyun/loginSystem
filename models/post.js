@@ -19,6 +19,10 @@ const postSchema = mongoose.Schema({
   checksum: {
     type: String,
     required: false
+  },
+  imageUrl: {
+    type: String,
+    required: false
   }
 });
 
