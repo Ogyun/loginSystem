@@ -4,7 +4,7 @@ import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { FlashMessagesService } from 'angular2-flash-messages/module';
 import { Router } from '@angular/router';
 
-const URL = 'http://localhost:3000/users/fileupload';
+const URL = 'https://167.99.246.26:3000/users/fileupload';
 
 @Component({
   selector: 'app-profile',
