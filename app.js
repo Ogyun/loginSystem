@@ -52,7 +52,7 @@ const app = express();
 // init cookie-parser
 app.use(cookieParser());
 
-var server = http.createServer(options, app);
+var server = https.createServer(options, app);
 var io = require('socket.io')(server);
 
 // Set Static Folder
