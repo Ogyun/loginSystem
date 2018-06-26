@@ -14,40 +14,40 @@ export class AuthService {
   registerUser(user){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://localhost:3000/users/register', user,{headers: headers})
+    return this.http.post('https://167.99.246.26:3000/users/register', user,{headers: headers})
     .map(res => res.json());
   }
 
   authenticateUser(user){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://localhost:3000/users/authenticate', user,{headers: headers})
+    return this.http.post('https://167.99.246.26:3000/users/authenticate', user,{headers: headers})
     .map(res => res.json());
   }
 
   deleteUser(username){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://localhost:3000/users/deleteUser', username,{headers: headers})
+    return this.http.post('https://167.99.246.26:3000/users/deleteUser', username,{headers: headers})
     .map(res => res.json());
   }
   getAllUsers(){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://localhost:3000/users/getAllUsers',{headers: headers})
+    return this.http.get('https://167.99.246.26:3000/users/getAllUsers',{headers: headers})
       .map(res => res.json());
   }
   sendNewPassword(mail){
   let headers = new Headers();
   headers.append('Content-Type', 'application/json');
-  return this.http.post('http://localhost:3000/users/forgotPassword', mail,{headers: headers})
+  return this.http.post('https://167.99.246.26:3000/users/forgotPassword', mail,{headers: headers})
   .map(res => res.json());
   }
 
   changePassword(newPassword){
   let headers = new Headers();
   headers.append('Content-Type', 'application/json');
-  return this.http.post('http://localhost:3000/users/changePassword', newPassword,{headers: headers})
+  return this.http.post('https://167.99.246.26:3000/users/changePassword', newPassword,{headers: headers})
   .map(res => res.json());
   }
 
@@ -66,23 +66,23 @@ export class AuthService {
   */
 
   loggedIn() {
-    return this.http.get('http://localhost:3000/users/validateToken')
+    return this.http.get('https://167.99.246.26:3000/users/validateToken')
       .map(res => res.json()).map(data => data.success);
   }
 
   checkIfAdmin() {
-    return this.http.get('http://localhost:3000/users/validateAdmin')
+    return this.http.get('https://167.99.246.26:3000/users/validateAdmin')
       .map(res => res.json()).map(data => data.success);
   }
 
   logout() {
-    return this.http.get('http://localhost:3000/users/logout')
+    return this.http.get('https://167.99.246.26:3000/users/logout')
       .map(res => res.json());
   }
 
 
   getProfile() {
-    return this.http.get('http://localhost:3000/users/profile')
+    return this.http.get('https://167.99.246.26:3000/users/profile')
       .map(res => res.json());
   }
 

@@ -21,7 +21,7 @@ export class SocketService {
 
 //  token = this.getCookie("id_token");
   token = localStorage.getItem('id_token');
-  private socket = socketIo('http://localhost:3000', {
+  private socket = socketIo('https://167.99.246.26:3000', {
     query: {token: this.token}
   });
 
