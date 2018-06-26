@@ -8,7 +8,9 @@ const sha256 = require('sha256');
 
 // Create a new post
 router.post('/post', function(req, res, next) {
-  if(req.headers.authorization =! null && tokens.verifyToken(req.headers.authorization)) {
+  let decodedToken = tokens.decodeToken(req.cookies.Auth);
+  console.log(decodedToken)
+  if(req.cookies.Auth =! null && tokens.verifyToken(decodedToken)) {
     next();
   } else {
     res.send('Authorization failed!');
@@ -37,7 +39,8 @@ router.post('/post', function(req, res, next) {
 
 // Get all posts
 router.get('/getAllPosts', function(req, res, next) {
-  if(req.cookies.Auth =! null && tokens.verifyToken(req.cookies.Auth)) {
+  let token = req.cookies.Auth;
+  if(token =! null && tokens.verifyToken(token)) {
     next();
   } else {
     res.send('Authorization failed!');
@@ -55,7 +58,7 @@ router.get('/getAllPosts', function(req, res, next) {
 }, (req, res, next) => {
   Post.getAllPosts((err, posts) => {
     if (err) {
-      res.json({succes: false, msg:'Failed to get posts'});
+      res.json({success: false, msg:'Failed to get posts'});
     }
     else {
       posts.forEach(e => {

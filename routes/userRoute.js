@@ -9,15 +9,36 @@ const cookieParser = require('cookie-parser');
 // Register
 router.post('/register', (req, res, next) => {
 
-  let newUser = new User({
-    username: sanitize.encodeHTML(req.body.username),
-    email: sanitize.encodeHTML(req.body.email),
-    password: req.body.password
-  });
+  const username = sanitize.encodeHTML(req.body.username);
+  const email = sanitize.encodeHTML(req.body.email);
+  const password = req.body.password;
 
   // check if user or email already exsist.
   // dobbel check if password is 'strong' and email is correct format
+  if (!username || !email || !password) {
+    return res.json({
+      success: false,
+      msg: 'All fields must be filled out'
+    });
+  } else {
+    if (!User.validateEmail(email)){
+      return res.json({
+      success: false,
+      msg: 'Please use a valid email address'
+    });
+  }
+  if (!User.validatePassword(password)){
+    return res.json({
+    success: false,
+    msg: "Password must contain a number, lower and uppercase letter and be atleast 8 characters long "
+  });
+  }
 
+  let newUser = new User({
+    username: username,
+    email: email,
+    password: password
+  });
   // Add user
   User.addUser(newUser, (err, user) => {
     if (err) {
@@ -32,6 +53,7 @@ router.post('/register', (req, res, next) => {
       });
     }
   });
+}
 });
 
 // Authenticate
@@ -39,6 +61,13 @@ router.post('/authenticate', (req, res, next) => {
   const username = sanitize.encodeHTML(req.body.username);
   const password = req.body.password;
 
+  if (!username || !password) {
+    return res.json({
+      success: false,
+      msg: 'All fields must be filled out'
+    });
+  } else {
+  if (User.validatePassword(password)){
   // Does user exsist
   User.getUserByUsername(username, (err, user) => {
     if (err) throw err;
@@ -89,14 +118,33 @@ router.post('/authenticate', (req, res, next) => {
       }
     });
   });
+  } else {
+    return res.json({
+      success: false,
+      msg: "Password must contain a number, lower and uppercase letter and be atleast 8 characters long "
+    });
+  }
+}
 });
 
 router.get('/validateToken', (req, res, next) => {
-  const token = req.cookies.Auth
-  console.log(req.cookies)
+  let token = req.cookies.Auth
   if (tokens.verifyToken(token)) {
     res.json({
-      success: true
+      success: true,
+    })
+  } else {
+    res.json({
+      success: false
+    })
+  }
+});
+
+router.get('/validateAdmin', (req, res, next) => {
+  let token = req.cookies.Auth
+  if (tokens.verifyToken(token) && tokens.checkIfAdmin(token)) {
+    res.json({
+      success: true,
     })
   } else {
     res.json({
@@ -230,6 +278,44 @@ router.post('/forgotPassword', (req, res, next) => {
   }
 });
 
+// Get all users
+router.get('/getAllUsers', function(req, res, next) {
+  if(req.cookies.Auth =! null && tokens.verifyToken(req.cookies.Auth) && tokens.checkIfAdmin(req.cookies.Auth)) {
+    next();
+  } else {
+    res.send('Authorization failed!');
+  }
+
+}, (req, res, next) => {
+  User.getAllUsers((err, users) => {
+    if (err) {
+      res.json({succes: false, msg:'Failed to get users'});
+    }
+    else {
+      res.json({success: true, users});
+    };
+  });
+});
+
+// Delete user
+router.post('/deleteUser', function(req, res, next) {
+  if(req.cookies.Auth =! null && tokens.verifyToken(req.cookies.Auth) && tokens.checkIfAdmin(req.cookies.Auth)) {
+    next();
+  } else {
+    res.send('Authorization failed!');
+  }
+
+}, (req, res, next) => {
+  const username = req.body.username;
+  User.deleteUserByUsername(username,(err, users) => {
+    if (err) {
+      res.json({succes: false, msg:'Failed to delete user'});
+    }
+    else {
+      res.json({success: true, msg:'User is successfully deleted'});
+    };
+  });
+});
 
 
 module.exports = router;

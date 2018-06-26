@@ -37,6 +37,11 @@ const userSchema = mongoose.Schema({
   },
   codeExpire:{
     type: Number
+  },
+  isAdmin:{
+    type:Boolean,
+    required: true,
+    default: false
   }
 });
 
@@ -116,6 +121,12 @@ module.exports.deleteUserByUsername = (username, callback) =>  {
   User.remove(query, callback);
 }
 
+module.exports.getAllUsers = (callback) => {
+  //const query = {isAdmin:{$gte:true}};
+  const query = {isAdmin:false};
+  User.find(query, callback);
+}
+
 module.exports.comparePassword = function(candidatePassword, hash, callback) {
   bcrypt.compare(candidatePassword, hash, (err, isMatch) => {
     if(err) throw err
@@ -128,7 +139,6 @@ module.exports.updatePassword = function(user, callback) {
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) throw err;
       else {
-        console.log(user.username);
         let query = {
           username: user.username
         };
@@ -160,6 +170,7 @@ module.exports.validatePassword = function(password){
     const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
     return re.test(password);
 }
+
 module.exports.validateEmail = function(email){
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
