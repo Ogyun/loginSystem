@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { FlashMessagesService } from 'angular2-flash-messages/module';
+import { Router } from '@angular/router';
 
 const URL = 'http://localhost:3000/users/fileupload';
 
@@ -13,7 +14,11 @@ const URL = 'http://localhost:3000/users/fileupload';
 
 export class ProfileComponent implements OnInit {
 
-  constructor(private authService: AuthService, private flashMessage: FlashMessagesService) { }
+  constructor(
+    private authService: AuthService,
+    private flashMessage: FlashMessagesService,
+    private router: Router
+  ) { }
 
   public uploader: FileUploader = new FileUploader({ url: URL, itemAlias: 'photo', queueLimit: 1 });
 
@@ -42,6 +47,12 @@ export class ProfileComponent implements OnInit {
 
       if (res.success) {
         this.flashMessage.show('New profile image uploaded', { cssClass: 'alert-success', timeout: 3000 });
+
+        this.authService.getProfile().subscribe(user => {
+          this.username = user.username
+          this.email = user.email
+          this.profileIcon = user.profileIcon
+        });
 
       } else {
         this.flashMessage.show('An error occoured, remember size and image limits.', { cssClass: 'alert-danger', timeout: 3000 });
