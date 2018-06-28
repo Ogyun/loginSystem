@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit {
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
 
     let res = JSON.parse(response);
-
+    console.log(response);
       if (res.success) {
         this.flashMessage.show('New profile image uploaded', { cssClass: 'alert-success', timeout: 3000 });
 
