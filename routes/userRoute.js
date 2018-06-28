@@ -443,6 +443,7 @@ router.post('/fileupload', function(req, res, next) {
 
     upload(req, res, function(err) {
       if (err) {
+        console.log(err)
         // An error occurred when uploading
         return res.status(422).send("an error occured - Remember only image files are allowed!")
       }
