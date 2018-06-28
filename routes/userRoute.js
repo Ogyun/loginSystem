@@ -440,7 +440,7 @@ router.post('/fileupload', function(req, res, next) {
   function(req, res, next) {
 
     let userInfo = JSON.parse(req.cookies.User);
-    console.log(userInfo)
+
     upload(req, res, function(err) {
       if (err) {
         console.log(err)
@@ -451,12 +451,12 @@ router.post('/fileupload', function(req, res, next) {
       let path = req.file.path;
       let imageName = (path.split('/')[2]);
 
-      console.log(imageName)
+
 
       // set user profile image.
       User.changeUserProfile(userInfo.username, imageName, (err, updated) => {
         if (err) console.log(err)
-        console.log(updated)
+      
       })
 
       userInfo.profileIcon = imageName;

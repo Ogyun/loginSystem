@@ -42,7 +42,6 @@ export class ProfileComponent implements OnInit {
     //overide the onCompleteItem property of the uploader so we are
     //able to deal with the server response.
     this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
-    console.log(response);
     let res = JSON.parse(response);
 
       if (res.success) {
