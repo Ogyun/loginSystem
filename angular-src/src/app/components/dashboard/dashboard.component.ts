@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //enable logout tab in the navbar
-    this.authService.testLogin = false;
+    this.authService.testLogin = true;
     this.postService.getAllPosts().subscribe(posts => {
       posts.posts.forEach(e => this.messages.unshift(e));
     },

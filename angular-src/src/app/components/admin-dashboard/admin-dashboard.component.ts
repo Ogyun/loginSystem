@@ -19,7 +19,7 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit() {
     //enable logout tab in the navbar
-    this.authService.testLogin = false;
+    this.authService.testLogin = true;
     this.authService.getAllUsers().subscribe(data =>{
       if(data.success)
       {

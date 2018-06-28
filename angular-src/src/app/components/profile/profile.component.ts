@@ -28,9 +28,9 @@ export class ProfileComponent implements OnInit {
   profileIcon: String;
 
   ngOnInit() {
-    
+
     //enable logout tab in the navbar
-    this.authService.testLogin = false;
+    this.authService.testLogin = true;
     // get user informartion
     this.authService.getProfile().subscribe(user => {
       this.username = user.username
